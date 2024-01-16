@@ -10,6 +10,8 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { passwordStrength } from "check-password-strength"
 import PasswordStrength from "./PasswordStrength"
+import { registerUser } from "../lib/actions/authActions"
+import { toast } from "react-toastify"
 
 // create our form schema
 const FormSchema = z.object({
@@ -71,10 +73,18 @@ const SignupForm = () => {
     useEffect(() => {
         setPassStrength(passwordStrength(watch().password).id)
     }, [watch().password])
-
     const toggleVisiblePass = () => setIsVisiblePass(!isVisiblePass)
+
     const saveUser: SubmitHandler<InputType> = async (data) => {
-        console.log({data})
+        const {accepted, confirmPassword, ...user } = data
+        try {
+            const result = await registerUser(user)
+            toast.success("The User Registred Successfully.")
+        }
+        catch(error){
+            toast.error("Something Went Wrong!")
+            console.error(error)
+        }
     }
     return (
         <form onSubmit={handleSubmit(saveUser)} className="grid grid-cols-2 place-self-stretch gap-3 p-2 shadow border rounded-md">
@@ -121,6 +131,7 @@ const SignupForm = () => {
                 <EyeIcon className="w-4 cursor-pointer" onClick={toggleVisiblePass} />
              }
              />
+
              <PasswordStrength passStrength={passStrength} />
              <Input
              errorMessage={errors.confirmPassword?.message}

@@ -4,7 +4,8 @@ const Appbar = () => {
 
     return (
         <Navbar isBordered>
-        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarContent className="hidden sm:flex 
+        gap-4" justify="center">
             <NavbarItem>
             <Link color="foreground" href="/">
                 Home
